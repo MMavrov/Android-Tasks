@@ -31,4 +31,5 @@
         android:background="#FF0000FF"
         android:orientation="horizontal"
         android:layout_gravity="center_vertical"/>
+
 </FrameLayout>
