@@ -6,9 +6,11 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.DragEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import java.util.Hashtable;
 import java.util.Random;
@@ -17,11 +19,15 @@ public class Puzzle extends Activity {
     ImageView[] imagePieces;
     RelativeLayout layout;
     Hashtable<Integer, Integer> linkTable;
+    int width, height;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_puzzle);
+
+        width = getWindowManager().getDefaultDisplay().getWidth();
+        height = getWindowManager().getDefaultDisplay().getHeight();
 
         DrawBoard();
     }
@@ -36,9 +42,9 @@ public class Puzzle extends Activity {
         for(int i = 0; i < imagesArray.length(); ++i) {
             imagePieces[i] = new ImageView(this);
 
-            imagePieces[i].setOnLongClickListener(new View.OnLongClickListener() {
+            imagePieces[i].setOnTouchListener(new View.OnTouchListener() {
                 @Override
-                public boolean onLongClick(View v) {
+                public boolean onTouch(View v, MotionEvent event) {
                     ClipData.Item item = new ClipData.Item((String.valueOf(v.getId())));
 
                     ClipData dragData = new ClipData(item.getText(), new String[]{}, item);
@@ -49,7 +55,7 @@ public class Puzzle extends Activity {
                     // Starts the drag
                     v.startDrag(dragData,  // the data to be dragged
                             myShadow,  // the drag shadow builder
-                            null,      // no need to use local data
+                            null,      // here set the imagePieces[i] and get it in the DragListener with event.getLocalState()
                             0          // flags (not currently used, set to 0)
                     );
 
@@ -60,35 +66,31 @@ public class Puzzle extends Activity {
             imagePieces[i].setOnDragListener(new ImageView.OnDragListener() {
                 @Override
                 public boolean onDrag(View v, DragEvent event) {
-                    switch (event.getAction()) {
+                    if(event.getAction() == DragEvent.ACTION_DROP) {
 
-                        case DragEvent.ACTION_DRAG_STARTED:
-                            return true;
-                        case DragEvent.ACTION_DRAG_ENTERED:
-                            return true;
-                        case DragEvent.ACTION_DRAG_LOCATION:
-                            return true;
-                        case DragEvent.ACTION_DRAG_EXITED:
-                            return true;
-                        case DragEvent.ACTION_DROP: {
-                            ClipData.Item target = event.getClipData().getItemAt(0);
-                            ImageView f = (ImageView)findViewById(Integer.parseInt(target.getText().toString()));
-                            Drawable t = ((ImageView)v).getDrawable();
+                        ClipData.Item shadow = event.getClipData().getItemAt(0);
+                        ImageView shadowView = (ImageView)findViewById(Integer.parseInt(shadow.getText().toString()));
 
-                            ((ImageView)v).setImageDrawable(f.getDrawable());
+                        Drawable target = ((ImageView)v).getDrawable();
+                        ((ImageView)v).setImageDrawable(shadowView.getDrawable());
+                        shadowView.setImageDrawable(target);
 
-                            f.setImageDrawable(t);
+                        int x = linkTable.get(((ImageView) v).getId());
+                        int y = linkTable.get(shadowView.getId());
+                        linkTable.put(shadowView.getId(), x);
+                        linkTable.put(((ImageView)v).getId(), y);
 
-                            v.invalidate();
-
-                            return true;
+                        for (Integer i = 1; i <= 16; i++) {
+                            if(linkTable.get(i) != i)
+                            {
+                                return true;
+                            }
                         }
 
-                        case DragEvent.ACTION_DRAG_ENDED:
-                            return true;
+                        Toast.makeText(Puzzle.this, "YOU WIN!", Toast.LENGTH_LONG).show();
 
                     }
-                    return false;
+                    return true;
                 }
             });
 
@@ -101,13 +103,15 @@ public class Puzzle extends Activity {
 
             // Shuffle of images
             int random = new Random().nextInt(16);
-            while (linkTable.containsValue(random)){
+            while (linkTable.containsValue(random + 1)){
                 random = new Random().nextInt(16);
             };
-            linkTable.put(i, random);
+            linkTable.put(i+1, random+1);
 
             imagePieces[i].setImageDrawable(imagesArray.getDrawable(random));
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(200, 120);
+
+            // Fixing the exact position and size
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width/4, height/4);
             if(i == 0)
             {
                 layout.addView(imagePieces[i], params);
@@ -125,8 +129,8 @@ public class Puzzle extends Activity {
             }
         }
 
-
-
         imagesArray.recycle();
     }
+
+
 }
