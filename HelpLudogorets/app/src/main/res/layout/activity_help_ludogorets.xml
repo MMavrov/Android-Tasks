@@ -1,0 +1,36 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HelpLudogorets">
+
+    <VideoView
+        android:id="@+id/video"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/rew"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/prev"
+        android:layout_below="@id/video"
+        android:layout_toLeftOf="@+id/play_pause"/>
+
+    <Button
+        android:id="@id/play_pause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/play"
+        android:layout_below="@id/video"
+        android:layout_centerHorizontal="true"/>
+
+    <Button
+        android:id="@+id/fwd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/next"
+        android:layout_below="@id/video"
+        android:layout_toRightOf="@id/play_pause"/>
+
+</RelativeLayout>
