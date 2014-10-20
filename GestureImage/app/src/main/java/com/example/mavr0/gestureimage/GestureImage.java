@@ -2,67 +2,48 @@ package com.example.mavr0.gestureimage;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.view.GestureDetectorCompat;
-import android.view.DragEvent;
-import android.view.GestureDetector;
+import android.support.v4.view.MotionEventCompat;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GestureImage extends Activity {
-    GestureDetectorCompat detector;
+    private List<Integer> pointerIDs;
+    private int _xDelta;
+    private int _yDelta;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gesture_image);
-        detector = new GestureDetectorCompat(this, new GestureDetector.OnGestureListener() {
-            @Override
-            public boolean onDown(MotionEvent e) {
-                return false;
-            }
 
-            @Override
-            public void onShowPress(MotionEvent e) {
-
-            }
-
-            @Override
-            public boolean onSingleTapUp(MotionEvent e) {
-                return false;
-            }
-
-            @Override
-            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-                return false;
-            }
-
-            @Override
-            public void onLongPress(MotionEvent e) {
-
-            }
-
-            @Override
-            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                return false;
-            }
-        });
-
+        pointerIDs = new ArrayList<Integer>();
         final ImageView gunman = (ImageView) findViewById(R.id.gunman);
+
         gunman.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-            gunman.startDrag(null, new View.DragShadowBuilder(v), gunman, 0);
-            return false;
-            }
-        });
 
-        gunman.setOnDragListener(new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
+                int action = MotionEventCompat.getActionMasked(event);
 
+                switch (action) {
 
-            return true;
+                    case (MotionEvent.ACTION_DOWN) :
+                        _xDelta = (int) (event.getRawX() - v.getX());
+                        _yDelta = (int) (event.getRawY() - v.getY());
+
+                        break;
+
+                    case (MotionEvent.ACTION_MOVE) :
+                        v.setTranslationX(event.getRawX() - _xDelta);
+                        v.setTranslationY(event.getRawY() - _yDelta);
+                        break;
+                }
+
+                return true;
             }
         });
     }
