@@ -3,11 +3,9 @@ package com.example.mavr0.swipeandzoom;
 import android.app.Activity;
 import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,7 +16,7 @@ public class SwipeZoomActivity extends Activity implements GestureDetector.OnGes
     private TypedArray imagesArray;
     private int currentImageNumber;
 
-    private GestureDetectorCompat gestureDetector;
+    private GestureDetector gestureDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +37,13 @@ public class SwipeZoomActivity extends Activity implements GestureDetector.OnGes
         imageView.setImageDrawable(imagesArray.getDrawable(currentImageNumber));
 
         currentNumberView.setText(currentImageNumber + 1 + " / " + imagesArray.length());
+
+        gestureDetector = new GestureDetector(this, this);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return gestureDetector.onTouchEvent(event);
     }
 
     @Override
@@ -50,9 +55,9 @@ public class SwipeZoomActivity extends Activity implements GestureDetector.OnGes
         // as it may conflict with a button push
         if (Math.abs(dx) > 30 && Math.abs(velocityX) > Math.abs(velocityY)) {
             if (velocityX > 0) {
-                MoveRight();
-            } else {
                 Moveleft();
+            } else {
+                MoveRight();
             }
             return true;
         } else {
@@ -62,7 +67,7 @@ public class SwipeZoomActivity extends Activity implements GestureDetector.OnGes
 
     private void MoveRight() {
         if (currentImageNumber == imagesArray.length() - 1) {
-            Toast.makeText(SwipeZoomActivity.this, "You have reached the end of the gallery!", Toast.LENGTH_LONG).show();
+            Toast.makeText(SwipeZoomActivity.this, "No more images!", Toast.LENGTH_LONG).show();
             return;
         }
         else {
@@ -77,7 +82,7 @@ public class SwipeZoomActivity extends Activity implements GestureDetector.OnGes
 
     private void Moveleft() {
         if (currentImageNumber == 0) {
-            Toast.makeText(SwipeZoomActivity.this, "You have reached the beginning of the gallery!", Toast.LENGTH_LONG).show();
+            Toast.makeText(SwipeZoomActivity.this, "No more images!", Toast.LENGTH_LONG).show();
             return;
         }
         else {
