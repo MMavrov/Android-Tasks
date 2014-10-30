@@ -13,7 +13,7 @@
         android:layout_centerInParent="true" />
 
     <TextView
-        android:id="@+id/current_number_view"
+        android:id="@+id/counter_view"
         android:layout_width="60dp"
         android:layout_height="30dp"
         android:layout_below="@id/image_view"

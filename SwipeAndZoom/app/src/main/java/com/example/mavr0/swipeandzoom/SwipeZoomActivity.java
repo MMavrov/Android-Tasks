@@ -10,73 +10,67 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class SwipeZoomActivity extends Activity implements GestureDetector.OnGestureListener  {
+public class SwipeZoomActivity extends Activity {
     private ImageView imageView;
-    private TextView currentNumberView;
+    private TextView counterView;
     private TypedArray imagesArray;
     private int currentImageNumber;
-
     private GestureDetector gestureDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe_zoom);
-
-        Initialize();
-    }
-
-    private void Initialize() {
-
-        imageView = (ImageView) findViewById(R.id.image_view);
-
-        currentNumberView = (TextView) findViewById(R.id.current_number_view);
         currentImageNumber = 0;
+
         imagesArray = getResources().obtainTypedArray(R.array.images);
 
+        imageView = (ImageView) findViewById(R.id.image_view);
         imageView.setImageDrawable(imagesArray.getDrawable(currentImageNumber));
 
-        currentNumberView.setText(currentImageNumber + 1 + " / " + imagesArray.length());
+        counterView = (TextView) findViewById(R.id.counter_view);
+        counterView.setText(currentImageNumber + 1 + " / " + imagesArray.length());
 
-        gestureDetector = new GestureDetector(this, this);
+        gestureDetector = new GestureDetector(this, simpleOnGestureListener);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        // The gestureDetector.onTouchEvent method shows a good implementation of the basic movement actions
         return gestureDetector.onTouchEvent(event);
     }
 
-    @Override
-    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        Log.d("onFling", " onFling");
+    GestureDetector.SimpleOnGestureListener simpleOnGestureListener = new GestureDetector.SimpleOnGestureListener() {
 
-        int dx = (int) (e2.getX() - e1.getX());
-        // don't accept the fling if it's too short
-        // as it may conflict with a button push
-        if (Math.abs(dx) > 30 && Math.abs(velocityX) > Math.abs(velocityY)) {
-            if (velocityX > 0) {
-                Moveleft();
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            Log.d("onFling", " onFling");
+
+            int dx = (int) (e2.getX() - e1.getX());
+            if (Math.abs(dx) > 30 && Math.abs(velocityX) > Math.abs(velocityY)) {
+                if (velocityX > 0) {
+                    Moveleft();
+                } else {
+                    MoveRight();
+                }
+                return true;
             } else {
-                MoveRight();
+                return false;
             }
-            return true;
-        } else {
-            return false;
         }
-    }
+    };
 
     private void MoveRight() {
         if (currentImageNumber == imagesArray.length() - 1) {
-            Toast.makeText(SwipeZoomActivity.this, "No more images!", Toast.LENGTH_LONG).show();
+            Toast.makeText(SwipeZoomActivity.this, "No more images!", Toast.LENGTH_SHORT).show();
             return;
-        }
-        else {
+        } else {
             currentImageNumber += 1;
 
             imageView.setImageDrawable(imagesArray.getDrawable(currentImageNumber));
             imageView.invalidate();
 
-            currentNumberView.setText(currentImageNumber + 1 + " / " + imagesArray.length());
+            counterView.setText(currentImageNumber + 1 + " / " + imagesArray.length());
         }
     }
 
@@ -84,44 +78,13 @@ public class SwipeZoomActivity extends Activity implements GestureDetector.OnGes
         if (currentImageNumber == 0) {
             Toast.makeText(SwipeZoomActivity.this, "No more images!", Toast.LENGTH_LONG).show();
             return;
-        }
-        else {
+        } else {
             currentImageNumber -= 1;
 
             imageView.setImageDrawable(imagesArray.getDrawable(currentImageNumber));
             imageView.invalidate();
 
-            currentNumberView.setText(currentImageNumber + 1 + " / " + imagesArray.length());
+            counterView.setText(currentImageNumber + 1 + " / " + imagesArray.length());
         }
-    }
-
-    @Override
-    public boolean onDown(MotionEvent e) {
-        Log.d("onDown", " onDown");
-        return false;
-    }
-
-    @Override
-    public void onShowPress(MotionEvent e) {
-        Log.d("onShowPress", " onShowPress");
-
-    }
-
-    @Override
-    public boolean onSingleTapUp(MotionEvent e) {
-        Log.d("onSingleTapUp", " onSingleTapUp");
-        return false;
-    }
-
-    @Override
-    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        Log.d("onScroll", " onScroll");
-        return false;
-    }
-
-    @Override
-    public void onLongPress(MotionEvent e) {
-        Log.d("onLongPress", " onLongPress");
-
     }
 }
