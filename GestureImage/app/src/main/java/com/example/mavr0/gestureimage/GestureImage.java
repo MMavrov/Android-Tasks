@@ -8,7 +8,7 @@ import android.widget.ImageView;
 public class GestureImage extends Activity {
     private ImageView gunman;
 
-    private int firtsTouchX;
+    private int firstTouchX;
     private int firstTouchY;
 
     private double firstTouchLength;
@@ -23,10 +23,13 @@ public class GestureImage extends Activity {
         case (MotionEvent.ACTION_DOWN):
         case (MotionEvent.ACTION_POINTER_DOWN):
             if (event.getPointerCount() == 1) {
-                firtsTouchX = (int) event.getX();
+                firstTouchX = (int) event.getX();
                 firstTouchY = (int) event.getY();
 
             } else {
+                firstTouchX = (int) (event.getX(1) + event.getX(0))/2;
+                firstTouchY = (int) (event.getY(1) + event.getY(0))/2;
+
                 firstTouchLength = Math.sqrt(Math.pow(Math.abs(event.getX(1) - event.getX(0)), 2)
                                      + Math.pow(Math.abs(event.getY(1) - event.getY(0)), 2));
 
@@ -41,6 +44,8 @@ public class GestureImage extends Activity {
             if (event.getPointerCount() == 1) {
                 MoveView(event.getX(), event.getY());
             } else {
+                MoveView((event.getX(1) + event.getX(0))/2, (event.getY(1) + event.getY(0))/2);
+
                 ScaleView(event.getX(0), event.getX(1), event.getY(0), event.getY(1));
 
                 RotateView(event.getX(0), event.getX(1), event.getY(0), event.getY(1));
@@ -60,10 +65,10 @@ public class GestureImage extends Activity {
 
     private void MoveView(float X, float Y) {
         // Moving
-        float dX = X - firtsTouchX;
+        float dX = X - firstTouchX;
         float dY = Y - firstTouchY;
 
-        firtsTouchX = (int) X;
+        firstTouchX = (int) X;
         firstTouchY = (int) Y;
 
         gunman.setTranslationX(gunman.getX() + dX);
