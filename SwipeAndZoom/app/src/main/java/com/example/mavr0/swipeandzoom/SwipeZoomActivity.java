@@ -58,6 +58,22 @@ public class SwipeZoomActivity extends Activity {
                 return false;
             }
         }
+
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            if (imageView.getScaleX() == 2){
+                imageView.setScaleX((float) 1);
+                imageView.setScaleY((float) 1);
+
+                counterView.setTranslationY(0);
+            }else {
+                imageView.setScaleX((float) 2);
+                imageView.setScaleY((float) 2);
+
+                counterView.setTranslationY(120);
+            }
+            return true;
+        }
     };
 
     private void MoveRight() {
