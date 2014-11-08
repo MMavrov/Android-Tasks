@@ -4,66 +4,64 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 
 public class DrawableBrush extends Activity {
-    Drawable currentBrush;
-    RelativeLayout root;
-    LinearLayout brushesLayout;
-    Brush view;
-    Bitmap bitmap;
-    Paint paint;
-    Canvas canvas;
+    LinearLayout root;
+    DrawableView drawableView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawable_brush);
 
-        root = (RelativeLayout) findViewById(R.id.root);
-        brushesLayout = (LinearLayout) findViewById(R.id.brushes);
-
-        bitmap = Bitmap.createBitmap(128, 128, Bitmap.Config.ARGB_8888);
-        canvas = new Canvas(bitmap);
-
-        view = new Brush(DrawableBrush.this);
-        root.addView(view);
+        root = (LinearLayout) findViewById(R.id.root);
+        drawableView = new DrawableView(this);
+        root.addView(drawableView);
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public class DrawableView extends View{
+        private Bitmap  mBitmap;
+        private Canvas mCanvas;
 
-        currentBrush = ((ImageButton) findViewById(R.id.guitar)).getDrawable();
-
-        currentBrush.draw(canvas);
-
-//        view.setLayoutParams(new RelativeLayout.LayoutParams(brushesLayout.getHeight(), brushesLayout.getWidth()/3));
-        view.setX(event.getRawX());
-        view.setY(event.getRawY());
-        view.setAlpha(0.5f);
-        view.invalidate();
-
-        return true;
-    }
-
-    private class Brush extends View{
-
-        public Brush(Context context) {
+        public DrawableView(Context context) {
             super(context);
         }
 
         @Override
-        protected void onDraw(Canvas c) {
-            c.drawBitmap(bitmap, 0, 0, null);
+        protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+            super.onSizeChanged(w, h, oldw, oldh);
+
+            mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+            mCanvas = new Canvas(mBitmap);
+        }
+
+        @Override
+        public boolean onTouchEvent(MotionEvent event) {
+            Drawable currentBrush = DrawableBrush.this.getResources().getDrawable(R.drawable.guitar_icon);
+            currentBrush.setBounds(
+                    (int)event.getX(),
+                    (int)event.getY(),
+                    (int)event.getX()+100,
+                    (int)event.getY()+100);
+            currentBrush.setAlpha(150);
+            currentBrush.draw(mCanvas);
+
+            invalidate();
+
+            return true;
+        }
+
+        @Override
+        protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
+
+            canvas.drawBitmap(mBitmap, 0, 0, null);
         }
     }
 }

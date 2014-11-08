@@ -1,15 +1,17 @@
-<RelativeLayout
+<LinearLayout
     android:id="@+id/root"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DrawableBrush" >
+    tools:context=".DrawableBrush"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/brushes"
         android:layout_width="match_parent"
-        android:layout_height="80dp">
+        android:layout_height="80dp"
+        android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/guitar"
@@ -39,5 +41,4 @@
             android:background="#FFFFFF" />
 
     </LinearLayout>
-
-</RelativeLayout>
+</LinearLayout>
