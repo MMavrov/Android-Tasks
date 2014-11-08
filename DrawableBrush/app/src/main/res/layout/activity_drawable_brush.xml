@@ -23,16 +23,16 @@
             android:background="#FFFFFF" />
 
         <ImageButton
-            android:id="@+id/mic"
+            android:id="@+id/golang"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/mic_icon"
+            android:src="@drawable/golang"
             android:scaleType="fitCenter"
             android:background="#FFFFFF" />
 
         <ImageButton
-            android:id="@+id/piano"
+            android:id="@+id/drums"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
