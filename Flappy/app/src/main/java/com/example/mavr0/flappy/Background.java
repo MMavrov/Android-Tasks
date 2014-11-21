@@ -18,12 +18,8 @@ public class Background extends ImageView implements GameClock.GameClockListener
     private Bitmap mBitmap;
     private int currentPositionX = 0;
 
-    public Background(Context context) {
+    public Background(Context context, Point screenSize) {
         super(context);
-
-        Point screenSize = new Point();
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        wm.getDefaultDisplay().getSize(screenSize);
 
         mBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.clouds);
         mBitmap = Bitmap.createScaledBitmap(mBitmap, screenSize.x + 400, screenSize.y, true)

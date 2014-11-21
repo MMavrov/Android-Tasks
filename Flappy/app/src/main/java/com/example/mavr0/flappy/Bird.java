@@ -2,38 +2,44 @@ package com.example.mavr0.flappy;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Point;
 import android.graphics.PointF;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
 public class Bird extends ImageView implements GameClock.GameClockListener {
     private Bitmap mBitmap;
-    private Canvas mCanvas;
 
-    public Bird(Context context) {
+    private Point position = new Point();
+
+    public Bird(Context context, Point screenSize) {
         super(context);
 
+        position.set(60, screenSize.y / 2);
+
+        mBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.bird);
     }
 
     @Override
     public void onGameEvent(GameEvent gameEvent) {
-        draw(mCanvas);
     }
 
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
+
+        canvas.drawBitmap(mBitmap, position.x, position.y, null);
+        position.y++;
     }
 
-    public PointF getPosition() {
-        PointF position = new PointF();
-        int[] coordinates = new int[2];
-        getLocationOnScreen(coordinates);
-
-        position.set(coordinates[0], coordinates[1]);
+    public Point getPosition() {
         return position;
+    }
+
+    public void setPosition(Point position){
+        this.position.y = position.y;
     }
 
     @Override
