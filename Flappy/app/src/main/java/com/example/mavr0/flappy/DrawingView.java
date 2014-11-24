@@ -1,21 +1,18 @@
 package com.example.mavr0.flappy;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Point;
-import android.media.MediaPlayer;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
 
 public class DrawingView extends View implements GameClock.GameClockListener{
 
     private Canvas mCanvas;
     private Background background;
     private Bird bird;
+    private Obstacle obstacle;
 
     public DrawingView(Context context, GameClock gameClock) {
         super(context);
@@ -31,9 +28,11 @@ public class DrawingView extends View implements GameClock.GameClockListener{
         mCanvas = new Canvas();
         background = new Background(context, screenSize);
         bird = new Bird(context, screenSize);
+        obstacle = new Obstacle(context, screenSize);
 
         gameClock.subscribe(background);
         gameClock.subscribe(bird);
+        gameClock.subscribe(obstacle);
     }
 
     @Override
@@ -47,6 +46,7 @@ public class DrawingView extends View implements GameClock.GameClockListener{
 
         background.draw(canvas);
 //        bird.draw(canvas);
+        obstacle.draw(canvas);
     }
 
     @Override

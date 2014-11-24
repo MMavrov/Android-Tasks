@@ -4,14 +4,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
-import android.util.Log;
-import android.view.Display;
 import android.view.MotionEvent;
-import android.view.WindowManager;
 import android.widget.ImageView;
 
 public class Background extends ImageView implements GameClock.GameClockListener {
@@ -59,7 +55,6 @@ public class Background extends ImageView implements GameClock.GameClockListener
 
             currentPositionX++;
         }
-
     }
 
     public PointF getPosition(){
