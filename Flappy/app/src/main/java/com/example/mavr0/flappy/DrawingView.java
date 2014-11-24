@@ -46,7 +46,7 @@ public class DrawingView extends View implements GameClock.GameClockListener{
         super.onDraw(canvas);
 
         background.draw(canvas);
-        bird.draw(canvas);
+//        bird.draw(canvas);
     }
 
     @Override
