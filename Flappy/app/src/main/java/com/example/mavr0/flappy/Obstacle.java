@@ -44,7 +44,13 @@ public class Obstacle extends ImageView implements GameClock.GameClockListener {
 
         displacementX--;
 
-        drawNextObstacle();
+        if(displacementX + OBSTACLE_WIDTH == 0) {
+            drawNextObstacle();
+        }
+    }
+
+    public Rect getPosition() {
+        return new Rect(displacementX, obstacleCenterY - 100, displacementX + OBSTACLE_WIDTH, obstacleCenterY + 100);
     }
 
     @Override
@@ -52,11 +58,13 @@ public class Obstacle extends ImageView implements GameClock.GameClockListener {
 
     }
 
+    public void reset(){
+        drawNextObstacle();
+    }
+
     private void drawNextObstacle(){
-        if(displacementX + OBSTACLE_WIDTH == 0){
-            displacementX = screenSize.x;
-            Random r = new Random();
-            obstacleCenterY = r.nextInt(screenSize.y - 400) + 200;
-        }
+        displacementX = screenSize.x;
+        Random r = new Random();
+        obstacleCenterY = r.nextInt(screenSize.y - 400) + 200;
     }
 }
