@@ -11,10 +11,10 @@ import android.widget.Toast;
 
 public class DrawingView extends View implements GameClock.GameClockListener{
 
-    private Canvas mCanvas;
     private Background background;
     private Bird bird;
     private Obstacle obstacle;
+    private ScoreBoard scoreBoard;
     private Context context;
     private Point screenSize;
 
@@ -31,14 +31,15 @@ public class DrawingView extends View implements GameClock.GameClockListener{
 //        mediaPlayer.setLooping(true);
 //        mediaPlayer.start();
 
-        mCanvas = new Canvas();
         background = new Background(context, screenSize);
         bird = new Bird(context, screenSize);
         obstacle = new Obstacle(context, screenSize);
+        scoreBoard = new ScoreBoard(context);
 
         gameClock.subscribe(background);
         gameClock.subscribe(bird);
         gameClock.subscribe(obstacle);
+        gameClock.subscribe(scoreBoard);
     }
 
     @Override
@@ -53,6 +54,7 @@ public class DrawingView extends View implements GameClock.GameClockListener{
         background.draw(canvas);
         bird.draw(canvas);
         obstacle.draw(canvas);
+        scoreBoard.draw(canvas);
 
         detectCollision();
     }
@@ -77,11 +79,15 @@ public class DrawingView extends View implements GameClock.GameClockListener{
                     && (bird.getCurrentPosition().top <= obstacle.getPosition().top
                         || bird.getCurrentPosition().bottom >= obstacle.getPosition().bottom))
                 || bird.getCurrentPosition().top <= 0
-                || bird.getCurrentPosition().bottom >= screenSize.y){
-            Toast.makeText(context, "YOU LOSE", Toast.LENGTH_SHORT).show();
+                || bird.getCurrentPosition().bottom >= screenSize.y) {
+            Toast.makeText(
+                    context,
+                    String.format("YOUR SCORE: %d seconds!", scoreBoard.getScore()),
+                    Toast.LENGTH_SHORT).show();
 
             bird.reset();
             obstacle.reset();
+            scoreBoard.reset();
         }
     }
 }

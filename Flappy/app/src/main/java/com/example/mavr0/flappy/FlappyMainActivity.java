@@ -7,9 +7,6 @@ import android.os.Bundle;
 public class FlappyMainActivity extends Activity {
     GameClock gameClock = new GameClock();
 
-    Bird bird;
-    Background background;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
