@@ -1,7 +1,10 @@
 package com.example.mavr0.flappy;
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
+
+import com.example.mavr0.flappy.Fragments.LoginFragment;
 
 
 public class FlappyMainActivity extends Activity {
@@ -11,10 +14,13 @@ public class FlappyMainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        LoginFragment loginFragment = new LoginFragment();
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.login_fragment, loginFragment).commit();
+
+        setContentView(R.layout.fragment_login);
+
         DrawingView drawingView = new DrawingView(this, gameClock);
-
-        setContentView(drawingView);
-
         gameClock.subscribe(drawingView);
     }
 }
