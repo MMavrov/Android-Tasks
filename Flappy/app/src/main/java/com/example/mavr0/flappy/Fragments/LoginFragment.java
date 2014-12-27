@@ -1,6 +1,7 @@
 package com.example.mavr0.flappy.Fragments;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.mavr0.flappy.R;
@@ -23,18 +23,35 @@ public class LoginFragment extends Fragment {
     private View.OnClickListener playButtonOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Toast.makeText(getActivity().getApplicationContext(),
-                    ((EditText)getView().findViewById(R.id.username)).getText(),
-                    Toast.LENGTH_SHORT).show();
-
-
-            Toast.makeText(getActivity().getApplicationContext(),
-                    ((EditText)getView().findViewById(R.id.email)).getText(),
-                    Toast.LENGTH_SHORT).show();
-
+//            Toast.makeText(getActivity().getApplicationContext(),
+//                    ((EditText)getView().findViewById(R.id.username)).getText(),
+//                    Toast.LENGTH_SHORT).show();
+//
+//            Toast.makeText(getActivity().getApplicationContext(),
+//                    ((EditText)getView().findViewById(R.id.email)).getText(),
+//                    Toast.LENGTH_SHORT).show();
+//
 //            Toast.makeText(getActivity().getApplicationContext(),
 //                    Country.values()[(((RadioGroup) getActivity().findViewById(R.id.country)).getCheckedRadioButtonId())].toString(),
 //                    Toast.LENGTH_SHORT).show();
+
+            GameFragment gameFragment = new GameFragment();
+            getFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.game_fragment, gameFragment)
+                    .commit();
+
+            getFragmentManager()
+                    .beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .commit();
+
+            getFragmentManager()
+                    .beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+                    .commit();
+
+            getActivity().setContentView(R.layout.fragment_game);
         }
     };
 
